@@ -1,7 +1,11 @@
-const { weeklyGamesRoute } = require('./utils')
+const {
+  weeklyGamesRoute,
+  seasonalGamesRoute,
+  standingsRoute
+} = require('./utils')
 
 describe('weeklyGamesRoute', () => {
-  test('returns a stringified version of the params', () => {
+  test('returns the URL with the params', () => {
     expect(
       weeklyGamesRoute({
         seasonYear: '2019',
@@ -10,6 +14,105 @@ describe('weeklyGamesRoute', () => {
       })
     ).toBe(
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/week/12/games.json`
+    )
+    expect(
+      weeklyGamesRoute({
+        seasonYear: '2020',
+        seasonType: 'playoff',
+        weekNumber: 18
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2020-playoff/week/18/games.json`
+    )
+    expect(
+      weeklyGamesRoute({
+        seasonYear: '2012-2013',
+        seasonType: 'regular',
+        weekNumber: 3
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/week/3/games.json`
+    )
+  })
+})
+
+describe('seasonalGamesRoute', () => {
+  test('returns the URL with the params', () => {
+    expect(
+      seasonalGamesRoute({
+        seasonYear: '2019',
+        seasonType: 'regular',
+        teams: null
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/games.json`
+    )
+    expect(
+      seasonalGamesRoute({
+        seasonYear: '2012-2013',
+        seasonType: 'regular'
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json`
+    )
+  })
+  test('works with an array of teams', () => {
+    expect(
+      seasonalGamesRoute({
+        seasonYear: '2019',
+        seasonType: 'regular',
+        teams: ['MIA']
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/games.json?team=MIA`
+    )
+    expect(
+      seasonalGamesRoute({
+        seasonYear: '2012-2013',
+        seasonType: 'regular',
+        teams: ['MIA', 'NYJ', 'GB']
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json?team=MIA,NYJ,GB`
+    )
+    expect(
+      seasonalGamesRoute({
+        seasonYear: '2012-2013',
+        seasonType: 'regular',
+        teams: []
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json`
+    )
+  })
+})
+
+describe('standingsRoute', () => {
+  test('returns the URL with the params', () => {
+    expect(
+      standingsRoute({
+        seasonYear: '2019',
+        seasonType: 'regular'
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/standings.json?stats=wins`
+    )
+    expect(
+      standingsRoute({
+        seasonYear: '2020',
+        seasonType: 'playoff'
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2020-playoff/standings.json?stats=wins`
+    )
+    expect(
+      standingsRoute({
+        seasonYear: '2012-2013',
+        seasonType: 'regular',
+        stats: 'wins,losses'
+      })
+    ).toBe(
+      `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/standings.json?stats=wins,losses`
     )
   })
 })
