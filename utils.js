@@ -9,17 +9,26 @@ const myAxios = axios.create({
   }
 })
 
-const fetcher = async path => {
+const allFetcher = async (method, path, options = {}) => {
+  const response = await myAxios[method](path, options)
+  return response.data
+}
+
+const getFetcher = async path => {
   const res = await myAxios.get(path)
+  return res.data
+}
+
+const postFetcher = async (path, options) => {
+  const res = await myAxios.post(path, options)
   return res.data
 }
 
 const weeklyGamesRoute = ({ seasonYear, seasonType, weekNumber }) =>
   `https://api.mysportsfeeds.com/v2.1/pull/nfl/${seasonYear}-${seasonType}/week/${weekNumber}/games.json`
 
-const seasonalGamesRoute = ({ seasonYear, seasonType, teams }) => {
-  const finalTeams = teams || []
-  const teamsParam = finalTeams.length ? `?team=${teams.join(',')}` : ''
+const seasonalGamesRoute = ({ seasonYear, seasonType, teams = '' }) => {
+  const teamsParam = teams.length ? `?team=${teams}` : ''
   return `https://api.mysportsfeeds.com/v2.1/pull/nfl/${seasonYear}-${seasonType}/games.json${teamsParam}`
 }
 
@@ -31,5 +40,6 @@ module.exports = {
   seasonalGamesRoute,
   standingsRoute,
   myAxios,
-  fetcher
+  getFetcher,
+  postFetcher
 }

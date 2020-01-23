@@ -42,7 +42,7 @@ describe('seasonalGamesRoute', () => {
       seasonalGamesRoute({
         seasonYear: '2019',
         seasonType: 'regular',
-        teams: null
+        teams: undefined
       })
     ).toBe(
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/games.json`
@@ -56,12 +56,12 @@ describe('seasonalGamesRoute', () => {
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json`
     )
   })
-  test('works with an array of teams', () => {
+  test('works with a string of teams', () => {
     expect(
       seasonalGamesRoute({
         seasonYear: '2019',
         seasonType: 'regular',
-        teams: ['MIA']
+        teams: 'MIA'
       })
     ).toBe(
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2019-regular/games.json?team=MIA`
@@ -70,7 +70,7 @@ describe('seasonalGamesRoute', () => {
       seasonalGamesRoute({
         seasonYear: '2012-2013',
         seasonType: 'regular',
-        teams: ['MIA', 'NYJ', 'GB']
+        teams: 'MIA,NYJ,GB'
       })
     ).toBe(
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json?team=MIA,NYJ,GB`
@@ -79,7 +79,7 @@ describe('seasonalGamesRoute', () => {
       seasonalGamesRoute({
         seasonYear: '2012-2013',
         seasonType: 'regular',
-        teams: []
+        teams: ''
       })
     ).toBe(
       `https://api.mysportsfeeds.com/v2.1/pull/nfl/2012-2013-regular/games.json`
