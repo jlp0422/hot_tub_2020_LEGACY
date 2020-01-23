@@ -1,7 +1,13 @@
-import myAxios from '../../../../utils'
+import { weeklyGamesRoute, getFetcher } from '../../../../utils'
 
-export default (req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'application/json')
-  res.end(JSON.stringify({ name: 'John Doe' }))
+export default async (req, res) => {
+  const indexToSlice = req.url.lastIndexOf('/') + 1
+  const weekNumber = req.url.slice(indexToSlice)
+  const route = weeklyGamesRoute({
+    seasonYear: 2019,
+    seasonType: 'regular',
+    weekNumber
+  })
+  const response = await getFetcher(route)
+  res.end(JSON.stringify(response))
 }
